@@ -3,253 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Weather Dashboard</title>
-    <meta name="description" content="A simple weather dashboard displaying city temperatures using Chart.js.">
-    <!-- Basic styling for readability and presentation -->
+    <title>Academic Grading System & City Info</title>
     <style>
+        /* General body styling for a clean, professional look */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
             margin: 0;
             padding: 20px;
-            background-color: #eef2f7;
-            color: #333;
-            line-height: 1.6;
+            background-color: #f4f7f6;
         }
+
+        /* Container for main content, centered with shadow */
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 20px auto;
-            background-color: #ffffff;
+            background: #fff;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
+
+        /* Styling for headings */
         h1, h2 {
             color: #2c3e50;
-            text-align: center;
-            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-top: 25px;
         }
-        h1 {
-            font-size: 2.5em;
-            margin-top: 0;
-        }
-        h2 {
-            font-size: 1.5em;
-            color: #3498db;
-        }
-        canvas {
-            max-width: 100%;
-            height: auto;
-            margin-top: 30px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-        }
-        #avg-temp {
-            font-size: 1.4em;
-            text-align: center;
-            margin-top: 30px;
+
+        /* Labels for input fields and selects */
+        label {
             font-weight: bold;
-            padding: 15px;
-            background-color: #e8f0fe;
-            border-left: 5px solid #3498db;
+            margin-bottom: 8px;
+            display: block;
+            color: #555;
+        }
+
+        /* Styling for numeric input and select dropdowns */
+        input[type="number"], select {
+            width: calc(100% - 22px); /* Full width minus padding and border */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
             border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        /* Styling for buttons */
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Styling for result display sections */
+        .result-section, .info-section {
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .result-section {
+            background-color: #e9ecef;
+            border-left: 5px solid #007bff; /* Blue accent border */
+        }
+
+        .info-section {
+            background-color: #f8f9fa;
+            border-left: 5px solid #6c757d; /* Gray accent border */
+        }
+
+        .result-section p, .info-section p {
+            margin: 5px 0;
+            font-size: 1.1rem;
+        }
+
+        .result-section strong, .info-section strong {
             color: #2c3e50;
         }
-        .footer {
-            margin-top: 50px;
-            font-size: 0.85em;
-            text-align: center;
-            color: #7f8c8d;
-            padding: 20px;
-            border-top: 1px solid #e0e0e0;
-            background-color: #fcfcfc;
-            border-radius: 0 0 10px 10px; /* Rounded bottom corners */
+
+        /* Specific styling for dynamic content spans */
+        #selected-city, #city-humidity {
+            font-weight: bold;
+            color: #007bff; /* Highlight dynamic city info */
         }
-        .footer pre {
-            white-space: pre-wrap;
-            text-align: left;
-            margin: 10px auto;
-            max-width: 700px;
-            padding: 10px;
-            background-color: #f0f4f8;
-            border: 1px solid #dcdcdc;
-            border-radius: 5px;
-            font-size: 0.75em;
+
+        /* Footer styling for license information */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.9em;
+            color: #6c757d;
         }
     </style>
-    <!-- Chart.js library loaded from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Global City Temperatures Dashboard</h1>
-        <h2>Visualize Current Weather Conditions</h2>
+        <h1>Academic & General Information Dashboard</h1>
 
-        <!-- Canvas element for Chart.js to render the bar chart -->
-        <canvas id="temp-chart"></canvas>
+        <section>
+            <h2>Student Grade Calculator</h2>
+            <label for="grade-input">Enter Numeric Grade (0-100):</label>
+            <input type="number" id="grade-input" min="0" max="100" value="75">
+            <button onclick="calculateGrade()">Calculate Letter Grade</button>
 
-        <!-- Paragraph element to display the average temperature -->
-        <p id="avg-temp">Loading average temperature...</p>
+            <div class="result-section">
+                <p><strong>Input Grade:</strong> <span id="display-grade">--</span></p>
+                <p><strong>Letter Grade:</strong> <span id="letter-grade">--</span></p>
+                <p><strong>Grade Status:</strong> <span id="grade-status">--</span></p>
+            </div>
+        </section>
+
+        <section>
+            <h2>City Information Filter</h2>
+            <label for="city-filter">Select a City:</label>
+            <select id="city-filter">
+                <option value="London" data-humidity="75">London</option>
+                <option value="New York" data-humidity="60">New York</option>
+                <option value="Tokyo" data-humidity="80">Tokyo</option>
+                <option value="Sydney" data-humidity="70">Sydney</option>
+                <option value="Paris" data-humidity="65">Paris</option>
+            </select>
+
+            <div class="info-section">
+                <p><strong>Selected City:</strong> <span id="selected-city">--</span></p>
+                <p><strong>Humidity:</strong> <span id="city-humidity">--</span></p>
+            </div>
+        </section>
     </div>
 
-    <!-- Footer containing the MIT License information -->
-    <footer class="footer">
-        <p>This project is licensed under the MIT License.</p>
-        <pre>
-MIT License
-
-Copyright (c) 2023 [Your Name/Institution]
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-        </pre>
+    <footer id="license-footer">
+        <!-- MIT License -->
+        The MIT License (MIT)
+        <br>
+        Copyright (c) 2023 [Your Name/Organization]
+        <br><br>
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        <br><br>
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        <br><br>
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
     </footer>
 
     <script>
         /**
-         * Main script for the weather dashboard.
-         * Executes once the DOM is fully loaded.
+         * Function to calculate and display a letter grade and status based on a numeric input.
+         * Grades are mapped as follows:
+         * A: 90-100
+         * B: 80-89
+         * C: 70-79
+         * D: 60-69
+         * F: 0-59
+         * Status is 'Pass' for D or higher, 'Fail' for F.
          */
-        document.addEventListener('DOMContentLoaded', () => {
-            // Simulate loading weather data from 'weather.json'.
-            // In a real application, this would be an AJAX call (e.g., fetch('weather.json')).
-            const weatherData = [
-                {"city": "London", "temperature": 15},
-                {"city": "Paris", "temperature": 18},
-                {"city": "Berlin", "temperature": 12},
-                {"city": "Rome", "temperature": 22},
-                {"city": "Madrid", "temperature": 25},
-                {"city": "New York", "temperature": 10},
-                {"city": "Tokyo", "temperature": 20},
-                {"city": "Sydney", "temperature": 28},
-                {"city": "Cairo", "temperature": 30}
-            ];
+        function calculateGrade() {
+            const gradeInput = document.querySelector("#grade-input");
+            const displayGrade = document.querySelector("#display-grade");
+            const letterGradeSpan = document.querySelector("#letter-grade");
+            const gradeStatusSpan = document.querySelector("#grade-status");
 
-            // Extract city names (labels) and temperatures (data) for the chart.
-            const cities = weatherData.map(data => data.city);
-            const temperatures = weatherData.map(data => data.temperature);
+            let grade = parseInt(gradeInput.value);
 
-            // Calculate the average temperature.
-            // Ensure proper handling for empty data to avoid division by zero.
-            const totalTemperature = temperatures.reduce((sum, temp) => sum + temp, 0);
-            const averageTemperature = temperatures.length > 0
-                                       ? (totalTemperature / temperatures.length).toFixed(1) // Format to one decimal place
-                                       : 'N/A'; // Handle case where no data is available
-
-            // Update the #avg-temp element with the calculated average temperature.
-            const avgTempElement = document.getElementById('avg-temp');
-            if (avgTempElement) {
-                avgTempElement.textContent = `Average Temperature: ${averageTemperature}°C`;
+            // Input validation: ensure grade is a number within the 0-100 range.
+            if (isNaN(grade) || grade < 0 || grade > 100) {
+                displayGrade.textContent = "Invalid";
+                letterGradeSpan.textContent = "N/A";
+                gradeStatusSpan.textContent = "Error: Enter 0-100";
+                gradeStatusSpan.style.color = 'red'; // Highlight error
+                return;
             }
 
-            // Get the 2D rendering context of the canvas element for Chart.js.
-            const ctx = document.getElementById('temp-chart').getContext('2d');
+            displayGrade.textContent = grade;
+            gradeStatusSpan.style.color = ''; // Reset color from potential previous error
 
-            // Create and render the bar chart using Chart.js.
-            new Chart(ctx, {
-                type: 'bar', // Specifies a bar chart
-                data: {
-                    labels: cities, // City names for the x-axis
-                    datasets: [{
-                        label: 'Temperature (°C)', // Label for the dataset
-                        data: temperatures, // Temperature values for the bars
-                        backgroundColor: [ // Different colors for visual distinction
-                            'rgba(255, 99, 132, 0.7)', // Red
-                            'rgba(54, 162, 235, 0.7)', // Blue
-                            'rgba(255, 206, 86, 0.7)', // Yellow
-                            'rgba(75, 192, 192, 0.7)', // Green
-                            'rgba(153, 102, 255, 0.7)', // Purple
-                            'rgba(255, 159, 64, 0.7)', // Orange
-                            'rgba(199, 199, 199, 0.7)', // Grey
-                            'rgba(83, 221, 143, 0.7)',  // Light Green
-                            'rgba(255, 132, 99, 0.7)'   // Coral
-                        ],
-                        borderColor: [ // Matching border colors
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(199, 199, 199, 1)',
-                            'rgba(83, 221, 143, 1)',
-                            'rgba(255, 132, 99, 1)'
-                        ],
-                        borderWidth: 1 // Border thickness for bars
-                    }]
-                },
-                options: {
-                    responsive: true, // Chart will resize with window
-                    maintainAspectRatio: false, // Allows chart to take available height/width
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'City Temperature Distribution', // Chart title
-                            font: {
-                                size: 20,
-                                weight: 'bold'
-                            },
-                            color: '#2c3e50'
-                        },
-                        legend: {
-                            display: false // No need for legend as there's only one dataset
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.dataset.label}: ${context.raw}°C`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true, // Y-axis starts from 0
-                            title: {
-                                display: true,
-                                text: 'Temperature (°C)', // Y-axis label
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                },
-                                color: '#555'
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return value + '°C'; // Add degree symbol to Y-axis ticks
-                                }
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'City', // X-axis label
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                },
-                                color: '#555'
-                            }
-                        }
-                    }
-                }
+            let letterGrade;
+            let gradeStatus;
+
+            // Determine letter grade and status based on numeric input
+            if (grade >= 90) {
+                letterGrade = "A";
+                gradeStatus = "Pass";
+            } else if (grade >= 80) {
+                letterGrade = "B";
+                gradeStatus = "Pass";
+            } else if (grade >= 70) {
+                letterGrade = "C";
+                gradeStatus = "Pass";
+            } else if (grade >= 60) {
+                letterGrade = "D";
+                gradeStatus = "Pass";
+            } else {
+                letterGrade = "F";
+                gradeStatus = "Fail";
+            }
+
+            letterGradeSpan.textContent = letterGrade;
+            gradeStatusSpan.textContent = gradeStatus;
+        }
+
+        /**
+         * Initializes and handles the city information filter functionality.
+         * It updates the displayed city name and its humidity percentage based on user selection.
+         */
+        function initializeCityFilter() {
+            const cityFilter = document.querySelector("#city-filter");
+            const selectedCitySpan = document.querySelector("#selected-city");
+            const cityHumiditySpan = document.querySelector("#city-humidity");
+
+            /**
+             * Updates the city information display with the name and humidity
+             * from the provided option element.
+             * @param {HTMLOptionElement} selectedOption - The currently selected <option> element.
+             */
+            function updateCityInfo(selectedOption) {
+                // Get city name from the option's text content
+                const cityName = selectedOption.textContent;
+                // Get humidity from the custom 'data-humidity' attribute
+                const humidity = selectedOption.dataset.humidity;
+
+                selectedCitySpan.textContent = cityName;
+                cityHumiditySpan.textContent = `${humidity}%`;
+            }
+
+            // Add an event listener to the city filter dropdown for 'change' events
+            cityFilter.addEventListener("change", (event) => {
+                // When the selection changes, get the currently selected option
+                const selectedOption = event.target.options[event.target.selectedIndex];
+                updateCityInfo(selectedOption); // Update the display
             });
+
+            // Set the initial city information display when the page loads
+            // This ensures the display is populated even before user interaction
+            const initialSelectedOption = cityFilter.options[cityFilter.selectedIndex];
+            if (initialSelectedOption) {
+                updateCityInfo(initialSelectedOption);
+            }
+        }
+
+        // Ensure both grade calculation and city filter initialization run once the DOM is fully loaded.
+        document.addEventListener("DOMContentLoaded", () => {
+            calculateGrade(); // Initialize the grade display with default value
+            initializeCityFilter(); // Initialize the city filter with its default selected value
         });
     </script>
 </body>
