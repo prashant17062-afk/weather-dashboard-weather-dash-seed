@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        #temp-chart-container { width: 80%; margin: auto; }
+        footer { margin-top: 20px; text-align: center; font-size: small; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Weather Dashboard</h1>
+    <div id="temp-chart-container">
+        <canvas id="temp-chart"></canvas>
+    </div>
+    <p>Average Temperature: <span id="avg-temp"></span></p>
+
+    <script>
+        async function loadData() {
+            const response = await fetch('weather.json');
+            const data = await response.json();
+            return data;
+        }
+
+        async function createChart() {
+            const weatherData = await loadData();
+            const cityNames = weatherData.map(city => city.city);
+            const temperatures = weatherData.map(city => city.temperature);
+
+            const avgTemp = temperatures.reduce((a, b) => a + b, 0) / temperatures.length;
+            document.getElementById('avg-temp').textContent = avgTemp.toFixed(2);
+
+            const ctx = document.getElementById('temp-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: cityNames,
+                    datasets: [{
+                        label: 'Temperature (°C)',
+                        data: temperatures,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        createChart();
+    </script>
+
+    <footer>
+        &copy; 2023. MIT License.
+    </footer>
+</body>
+</html>
